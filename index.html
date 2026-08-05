@@ -21,7 +21,7 @@
 
   <div class="flex">
     <!-- Sidebar -->
-    <aside class="w-56 shrink-0 bg-white border-r border-gray-200 min-h-screen p-5">
+    <aside class="w-56 shrink-0 bg-white border-r border-gray-200 p-5 sticky top-0 h-screen overflow-y-auto">
       <div class="mb-6">
         <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">검색</h2>
         <div class="relative">
@@ -38,8 +38,12 @@
         <div id="country-filters" class="space-y-2"></div>
       </div>
 
-      <div class="mt-6">
+      <div class="mt-6 space-y-2">
         <p class="text-xs text-gray-400" id="result-count"></p>
+        <button id="download-all"
+          class="w-full bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium py-2 rounded-lg transition-colors">
+          ⬇ 필터 결과 전체 다운로드
+        </button>
       </div>
     </aside>
 
@@ -153,6 +157,25 @@
     }
 
     document.getElementById('search').addEventListener('input', renderCards);
+
+    document.getElementById('download-all').addEventListener('click', () => {
+      const q = document.getElementById('search').value.toLowerCase();
+      const filtered = allCards.filter(c => {
+        const matchName    = c.name.toLowerCase().includes(q);
+        const matchCountry = activeCountries.has('ALL') || activeCountries.has(c.country);
+        return matchName && matchCountry && c.glbUrl;
+      });
+      if (filtered.length === 0) { alert('다운로드할 GLB 파일이 없습니다.'); return; }
+      filtered.forEach((c, i) => {
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = c.glbUrl;
+          a.download = c.name + '.glb';
+          a.click();
+        }, i * 300);
+      });
+    });
+
     loadAssets();
   </script>
 </body>
