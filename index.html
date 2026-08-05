@@ -1,57 +1,121 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>빙수 월드 투어 — 에셋 갤러리</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            border: 'hsl(214.3 31.8% 91.4%)',
+            input: 'hsl(214.3 31.8% 91.4%)',
+            ring: 'hsl(221.2 83.2% 53.3%)',
+            background: 'hsl(0 0% 100%)',
+            foreground: 'hsl(222.2 84% 4.9%)',
+            primary: {
+              DEFAULT: 'hsl(221.2 83.2% 53.3%)',
+              foreground: 'hsl(210 40% 98%)',
+            },
+            secondary: {
+              DEFAULT: 'hsl(210 40% 96.1%)',
+              foreground: 'hsl(222.2 47.4% 11.2%)',
+            },
+            muted: {
+              DEFAULT: 'hsl(210 40% 96.1%)',
+              foreground: 'hsl(215.4 16.3% 46.9%)',
+            },
+            accent: {
+              DEFAULT: 'hsl(210 40% 96.1%)',
+              foreground: 'hsl(222.2 47.4% 11.2%)',
+            },
+            card: {
+              DEFAULT: 'hsl(0 0% 100%)',
+              foreground: 'hsl(222.2 84% 4.9%)',
+            },
+          },
+          borderRadius: {
+            lg: '0.5rem',
+            md: '0.375rem',
+            sm: '0.25rem',
+          },
+        },
+      },
+    }
+  </script>
   <style>
-    body { font-family: 'Noto Sans KR', sans-serif; }
-    .card:hover { transform: translateY(-2px); transition: transform 0.2s; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: hsl(0 0% 100%); color: hsl(222.2 84% 4.9%); }
+    .card { transition: box-shadow 0.15s, transform 0.15s; }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
+    input[type=checkbox] { accent-color: hsl(221.2 83.2% 53.3%); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: hsl(214.3 31.8% 85%); border-radius: 4px; }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen bg-background">
 
   <!-- Header -->
-  <header class="bg-white border-b border-gray-200 px-8 py-5">
-    <h1 class="text-xl font-bold text-gray-900">🍧 빙수 월드 투어 — 에셋 갤러리</h1>
-    <p class="text-sm text-gray-500 mt-1">사물 에셋 모음 · 썸네일 확인 후 GLB 다운로드</p>
+  <header class="sticky top-0 z-10 bg-background border-b border-border px-8 py-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-lg font-semibold tracking-tight">🍧 빙수 월드 투어 — 에셋 갤러리</h1>
+      <p class="text-sm text-muted-foreground mt-0.5">사물 에셋 모음 · GLB 다운로드</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="header-count" class="text-sm text-muted-foreground"></span>
+    </div>
   </header>
 
-  <div class="flex">
+  <div class="flex h-[calc(100vh-65px)]">
+
     <!-- Sidebar -->
-    <aside class="w-56 shrink-0 bg-white border-r border-gray-200 p-5 sticky top-0 h-screen overflow-y-auto">
-      <div class="mb-6">
-        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">검색</h2>
+    <aside class="w-60 shrink-0 border-r border-border bg-background sticky top-[65px] h-[calc(100vh-65px)] overflow-y-auto p-5 flex flex-col gap-6">
+
+      <!-- 검색 -->
+      <div class="space-y-2">
+        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wider">검색</p>
         <div class="relative">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input id="search" type="text" placeholder="파일명 검색..."
-            class="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500">
+            class="w-full pl-8 pr-3 py-1.5 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground">
         </div>
       </div>
 
-      <div>
-        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">국가 필터</h2>
-        <div id="country-filters" class="space-y-2"></div>
+      <!-- 국가 필터 -->
+      <div class="space-y-2">
+        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wider">국가</p>
+        <div id="country-filters" class="space-y-1.5"></div>
       </div>
 
-      <div class="mt-6 space-y-2">
-        <p class="text-xs text-gray-400" id="result-count"></p>
+      <!-- 결과 + 전체 다운로드 -->
+      <div class="mt-auto space-y-3">
+        <p class="text-xs text-muted-foreground" id="result-count"></p>
         <button id="download-all"
-          class="w-full bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium py-2 rounded-lg transition-colors">
-          ⬇ 필터 결과 전체 다운로드
+          class="w-full flex items-center justify-center gap-1.5 bg-primary text-primary-foreground text-xs font-medium py-2 px-3 rounded-md hover:opacity-90 transition-opacity">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          필터 결과 전체 다운로드
         </button>
       </div>
     </aside>
 
     <!-- Main -->
-    <main class="flex-1 p-6">
+    <main class="flex-1 overflow-y-auto p-6 bg-muted/30">
+      <div id="loading" class="flex items-center justify-center h-40 text-sm text-muted-foreground">
+        <svg class="animate-spin w-4 h-4 mr-2 text-primary" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        에셋 불러오는 중...
+      </div>
       <div id="grid" class="grid grid-cols-4 gap-4"></div>
-      <div id="empty" class="hidden text-center py-20 text-gray-400">검색 결과가 없습니다.</div>
-      <div id="loading" class="text-center py-20 text-gray-400">에셋 불러오는 중...</div>
+      <div id="empty" class="hidden flex items-center justify-center h-40 text-sm text-muted-foreground">검색 결과가 없습니다.</div>
     </main>
   </div>
 
@@ -66,21 +130,20 @@
 
     async function loadAssets() {
       try {
-        const res  = await fetch(API_BASE);
+        const res   = await fetch(API_BASE);
         const files = await res.json();
-
-        const pngs = files.filter(f => f.name.endsWith('.png'));
-        const glbs = new Set(files.filter(f => f.name.endsWith('.glb')).map(f => f.name));
+        const pngs  = files.filter(f => f.name.endsWith('.png'));
+        const glbs  = new Set(files.filter(f => f.name.endsWith('.glb')).map(f => f.name));
 
         allCards = pngs.map(f => {
           const name    = f.name.replace('.png', '');
-          const parts   = name.split('_');
-          const country = name.startsWith('COMMON') ? 'COMMON' : parts[0];
+          const country = name.startsWith('COMMON') ? 'COMMON' : name.split('_')[0];
           return {
-            name,
-            country,
+            name, country,
             imgUrl: `${RAW_BASE}/${f.name}`,
-            glbUrl: glbs.has(f.name.replace('.png', '.glb')) ? `${RAW_BASE}/${f.name.replace('.png', '.glb')}` : null,
+            glbUrl: glbs.has(f.name.replace('.png', '.glb'))
+              ? `${RAW_BASE}/${f.name.replace('.png', '.glb')}`
+              : null,
           };
         });
 
@@ -98,10 +161,10 @@
       wrap.innerHTML = '';
       countries.forEach(c => {
         const label = document.createElement('label');
-        label.className = 'flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-violet-600';
+        label.className = 'flex items-center gap-2 cursor-pointer text-sm text-foreground hover:text-primary py-0.5';
         label.innerHTML = `
-          <input type="checkbox" class="country-cb accent-violet-600 w-4 h-4" value="${c}" ${c === 'ALL' ? 'checked' : ''}>
-          <span>${c}</span>`;
+          <input type="checkbox" class="country-cb w-4 h-4 rounded" value="${c}" ${c === 'ALL' ? 'checked' : ''}>
+          <span>${c === 'ALL' ? '전체' : c}</span>`;
         wrap.appendChild(label);
       });
 
@@ -113,8 +176,7 @@
           } else {
             document.querySelector('.country-cb[value="ALL"]').checked = false;
             activeCountries.delete('ALL');
-            if (cb.checked) activeCountries.add(cb.value);
-            else activeCountries.delete(cb.value);
+            cb.checked ? activeCountries.add(cb.value) : activeCountries.delete(cb.value);
           }
           renderCards();
         });
@@ -122,9 +184,9 @@
     }
 
     function renderCards() {
-      const q = document.getElementById('search').value.toLowerCase();
-      const grid = document.getElementById('grid');
-      const empty = document.getElementById('empty');
+      const q        = document.getElementById('search').value.toLowerCase();
+      const grid     = document.getElementById('grid');
+      const empty    = document.getElementById('empty');
       grid.innerHTML = '';
 
       const filtered = allCards.filter(c => {
@@ -133,23 +195,34 @@
         return matchName && matchCountry;
       });
 
-      document.getElementById('result-count').textContent = `${filtered.length}개 에셋`;
-      empty.classList.toggle('hidden', filtered.length > 0);
+      const count = filtered.length;
+      document.getElementById('result-count').textContent = `${count}개 에셋`;
+      document.getElementById('header-count').textContent = `${count}개`;
+      empty.classList.toggle('hidden', count > 0);
 
       filtered.forEach(c => {
         const dlBtn = c.glbUrl
-          ? `<a href="${c.glbUrl}" download class="block w-full text-center bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium py-1.5 rounded-lg transition-colors">GLB 다운로드</a>`
-          : `<span class="block w-full text-center text-xs text-gray-400">GLB 준비 중</span>`;
+          ? `<a href="${c.glbUrl}" download
+               class="flex items-center justify-center gap-1 w-full bg-primary text-primary-foreground text-xs font-medium py-1.5 rounded-md hover:opacity-90 transition-opacity">
+               <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+               </svg>
+               GLB 다운로드
+             </a>`
+          : `<span class="flex items-center justify-center w-full border border-input text-muted-foreground text-xs py-1.5 rounded-md">준비 중</span>`;
 
         const card = document.createElement('div');
-        card.className = 'card bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm';
+        card.className = 'card bg-card border border-border rounded-lg overflow-hidden';
         card.innerHTML = `
-          <div class="aspect-square bg-gray-50 overflow-hidden">
-            <img src="${c.imgUrl}" alt="${c.name}" loading="lazy" class="w-full h-full object-contain p-3">
+          <div class="aspect-square bg-muted/40 overflow-hidden">
+            <img src="${c.imgUrl}" alt="${c.name}" loading="lazy"
+              class="w-full h-full object-contain p-3">
           </div>
           <div class="p-3 space-y-2">
-            <span class="inline-block text-xs bg-violet-100 text-violet-700 font-medium px-2 py-0.5 rounded-full">${c.country}</span>
-            <p class="text-xs font-medium text-gray-800 break-all leading-snug">${c.name}</p>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">${c.country}</span>
+            </div>
+            <p class="text-xs font-medium text-card-foreground break-all leading-snug">${c.name}</p>
             ${dlBtn}
           </div>`;
         grid.appendChild(card);
@@ -165,7 +238,7 @@
         const matchCountry = activeCountries.has('ALL') || activeCountries.has(c.country);
         return matchName && matchCountry && c.glbUrl;
       });
-      if (filtered.length === 0) { alert('다운로드할 GLB 파일이 없습니다.'); return; }
+      if (!filtered.length) { alert('다운로드할 GLB 파일이 없습니다.'); return; }
       filtered.forEach((c, i) => {
         setTimeout(() => {
           const a = document.createElement('a');
